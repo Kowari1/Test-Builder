@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Test_Builder.Pages.RunTestPage"             xmlns:vm ="clr-namespace:Test_Builder.ViewModels"
+             x:DataType="vm:RunTestViewModel"
+             xmlns:model ="clr-namespace:Test_Builder.Models"
+             xmlns:templates="clr-namespace:Test_Builder.Resources.DataTemplates"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#202020">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="ListTemplateCheckBox" x:DataType="model:CheckBoxItem">
+            <HorizontalStackLayout>
+                <CheckBox IsChecked="{Binding CorrectAnswer, Mode=TwoWay}" />
+                <Label MaximumWidthRequest="210" Background="Transparent" HorizontalOptions="Fill" Text="{Binding Text}" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListTemplateRadioButton" x:DataType="model:RadioButtonItem">
+            <HorizontalStackLayout>
+                <RadioButton IsChecked="{Binding CorrectAnswer, Mode=TwoWay}" HorizontalOptions="Center">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RunTestViewModel}}, Path=RadioButtonChekcedCommand}"
+                             CommandParameter="{Binding}"/>
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <Label MaximumWidthRequest="210" Background="Transparent" Text="{Binding Text}" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListTemplateText" x:DataType="model:TextItem">
+            <HorizontalStackLayout>
+                <Editor IsTextPredictionEnabled="True" AutoSize="TextChanges" MaximumWidthRequest="240" Background="Transparent" 
+        HorizontalOptions="Fill" IsSpellCheckEnabled="True"  Placeholder="Enter your answer" Text="{Binding CorrectAnswer, Mode=TwoWay}"/>
+            </HorizontalStackLayout>
+        </DataTemplate>
+
+        <templates:CreateTestTemplate x:Key="ItemSelector" CheckBox="{StaticResource ListTemplateCheckBox}"
+                                      RadioButton="{StaticResource ListTemplateRadioButton}"
+                                      Text="{StaticResource ListTemplateText}"/>
+    </ContentPage.Resources>
+
+    <Grid RowSpacing="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VerticalStackLayout Padding="15,15,15,0" Grid.Row="0">
+            <Button Text="End" Command="{Binding GoToMainPageCommand}"/>
+            <Label Text="{Binding Test.Name}" HorizontalTextAlignment="Center" Margin="0,15,0,0"/>
+            <TimePicker x:Name="Timer"/>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding DeepCloneTest.Questions}"                     
+                        SelectionMode="None" HorizontalOptions="Start">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid x:DataType="model:Question" Padding="15,15,15,15">
+                        <Border BackgroundColor="#404040" StrokeShape="RoundRectangle 25,25,25,25" Padding="15">
+                            <VerticalStackLayout>
+                                <HorizontalStackLayout Padding="0,20,15,15" >
+                                    <Label MaximumWidthRequest="250" Text="{Binding QuestionName}" HorizontalOptions="Fill" FontSize="17"/>
+                                </HorizontalStackLayout>
+                                <CollectionView ItemsSource="{Binding items}" ItemTemplate="{StaticResource ItemSelector}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+        <Border Grid.Row="1" StrokeShape="RoundRectangle 25,0,25,0" HorizontalOptions="End" BackgroundColor="Transparent" StrokeThickness="0" VerticalOptions="Start">
+            <VerticalStackLayout Grid.Row="1">
+                
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

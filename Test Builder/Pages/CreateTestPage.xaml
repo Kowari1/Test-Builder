@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Test_Builder.Pages.CreateTestPage"
+             xmlns:vm ="clr-namespace:Test_Builder.ViewModels"
+             x:DataType="vm:CreateTestPageViewModel"
+             xmlns:model ="clr-namespace:Test_Builder.Models"
+             xmlns:templates="clr-namespace:Test_Builder.Resources.DataTemplates"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#202020">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="ListTemplateCheckBox" x:DataType="model:CheckBoxItem">
+            <HorizontalStackLayout>
+                <CheckBox x:Name="ch" IsChecked="{Binding CorrectAnswer, Mode=TwoWay}"/>
+                <Editor x:Name="ed" IsTextPredictionEnabled="True" AutoSize="TextChanges" MaximumWidthRequest="210" Background="Transparent" HorizontalOptions="Fill" IsSpellCheckEnabled="True"  Placeholder="Enter your answer" Text="{Binding Text, Mode=TwoWay}"/>
+                <ImageButton Source="/Images/del.png"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateTestPageViewModel}}, Path=RemoveItemCommand}"
+                         CommandParameter="{Binding}"/>
+            </HorizontalStackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListTemplateRadioButton" x:DataType="model:RadioButtonItem">
+            <HorizontalStackLayout>
+                <RadioButton IsChecked="{Binding CorrectAnswer, Mode=TwoWay}">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateTestPageViewModel}}, Path=RadioButtonChekcedCommand}"
+                             CommandParameter="{Binding}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <Editor IsTextPredictionEnabled="True" AutoSize="TextChanges" MaximumWidthRequest="210" Background="Transparent"
+                        HorizontalOptions="Fill" IsSpellCheckEnabled="True"  Placeholder="Enter your answer" Text="{Binding Text, Mode=TwoWay}"/>
+                <ImageButton Source="/Images/del.png"
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateTestPageViewModel}}, Path=RemoveItemCommand}"
+                             CommandParameter="{Binding}"/>
+            </HorizontalStackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListTemplateText" x:DataType="model:TextItem">
+            <HorizontalStackLayout>
+                <Editor IsTextPredictionEnabled="True" AutoSize="TextChanges" MaximumWidthRequest="240" Background="Transparent" 
+                        HorizontalOptions="Fill" IsSpellCheckEnabled="True"  Placeholder="Enter your answer" Text="{Binding CorrectAnswer, Mode=TwoWay}"/>
+                <ImageButton Source="/Images/del.png"
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateTestPageViewModel}}, Path= RemoveItemCommand}"
+                             CommandParameter="{Binding}"/>
+            </HorizontalStackLayout>
+        </DataTemplate>
+
+        <templates:CreateTestTemplate x:Key="ItemSelector" CheckBox="{StaticResource ListTemplateCheckBox}"
+                                      RadioButton="{StaticResource ListTemplateRadioButton}"
+                                      Text="{StaticResource ListTemplateText}"/>
+    </ContentPage.Resources>
+
+    <Grid RowSpacing="30" Padding="0,0,0,30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <VerticalStackLayout Padding="15,15,15,0" Grid.Row="0">
+            <Button Text="CreateTest" Command="{Binding CreateTestCommand}"/>
+            <Editor Text="{Binding Test.Name, Mode=TwoWay}" AutoSize="TextChanges" HorizontalTextAlignment="Center"
+                        Placeholder="Enter Test Name" Margin="0,15,0,0" MaxLength="30"/>
+            <TimePicker x:Name="Timer" Time="{Binding Test.TimerValue, Mode=TwoWay}"/>
+        </VerticalStackLayout>
+        
+        <CollectionView x:Name="Qestions" Grid.Row="1" ItemsSource="{Binding Test.Questions}"                     
+                        SelectionMode="None" HorizontalOptions="Start">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid x:DataType="model:Question" Margin="15,0,0,0">
+                        <VerticalStackLayout>
+                            <HorizontalStackLayout Padding="0,20,0,0" >
+                                <Editor x:Name="QuestionName" Placeholder="Enter a question title" MaximumWidthRequest="250" AutoSize="TextChanges" Text="{Binding QuestionName}" HorizontalOptions="Fill"/>
+                                <ImageButton x:Name="RemoveQuestion" Source="/Images/del.png" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateTestPageViewModel}},
+                                Path= RemoveQuestionCommand}" CommandParameter="{Binding}"/>
+                            </HorizontalStackLayout>
+                            <CollectionView x:Name="Question" ItemsSource="{Binding items}" ItemTemplate="{StaticResource ItemSelector}"/>
+                            <ImageButton x:Name="AddItem" Margin="0,15,0,0" HorizontalOptions="Center" Source="/Images/plus.png" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CreateTestPageViewModel}},
+                                    Path= AddItemCommand}" CommandParameter="{Binding}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Border Grid.Row="1" StrokeShape="RoundRectangle 25,0,25,0" HorizontalOptions="End" BackgroundColor="Transparent" StrokeThickness="0" VerticalOptions="Start">
+            <VerticalStackLayout Grid.Row="1">
+                <ImageButton CornerRadius="0" Source="/Images/check_box.png" BackgroundColor="White" Command="{Binding CreateQuestionCheckBoxItemsCommand}"/>
+                <ImageButton Margin="0,5,0,0" CornerRadius="0" Source="/Images/radio_button.png" BackgroundColor="White" Command="{Binding CreateQuestionRadioButtomItemsCommand}"/>
+                <ImageButton Margin="0,5,0,0" CornerRadius="0" Source="/Images/text.png" BackgroundColor="White" Command="{Binding CreateQuestionTextItemsCommand}"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

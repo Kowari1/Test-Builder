@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             x:Class="Test_Builder.Popups.NotificationPopup"
+             Size="360, 150" Color="Transparent">
+
+    <Border Background="White" StrokeShape="RoundRectangle 25,25,25,25" StrokeThickness="0" Padding="10">
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="15">
+            <Label x:Name="Message" FontSize="18" HorizontalTextAlignment="Center" VerticalTextAlignment="Start"  HorizontalOptions="Start" VerticalOptions="Start" TextColor="Black"/>
+            <Button Text="OK" HeightRequest="40" WidthRequest="100" Clicked="Button_Clicked" VerticalOptions="End" HorizontalOptions="Center" Margin="0,15,0,0" BackgroundColor="{StaticResource Gray100}"/>
+        </VerticalStackLayout>
+    </Border>
+</mct:Popup>

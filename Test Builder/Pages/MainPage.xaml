@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Test_Builder.Pages.MainPage"
+             xmlns:vm ="clr-namespace:Test_Builder.ViewModels"
+             xmlns:model ="clr-namespace:Test_Builder.Models"
+             x:DataType="vm:MainPageViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#202020">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <VerticalStackLayout Grid.Row="0" Padding="15,15,15,0">
+            <Button Text="Create" Command="{Binding GoToCreateTestPageCommand}"/>
+            <Border StrokeShape="RoundRectangle 20" StrokeThickness="2" Stroke="White" Padding="10" Margin="0,15,0,0">
+                <SearchBar x:Name="searchTest" IsTextPredictionEnabled="True" IsSpellCheckEnabled="True"  Placeholder="Search Test..."  MinimumWidthRequest="200"
+                           TextChanged="searchTest_TextChanged"
+                           SearchCommand="{Binding SearchTestCommand}" SearchCommandParameter="{Binding Source={x:Reference searchTest},
+                    Path=Text}"/>
+            </Border>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" SelectionMode="None" ItemsSource="{Binding Tests}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Test">
+                        <Frame BackgroundColor="White" CornerRadius="25" MinimumHeightRequest="200" Margin="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Name}" TextColor="Black" Margin="20,10,0,0" Grid.Row="0"/>
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="Start">
+                                    <Label Text="{Binding Questions.Count, StringFormat=Qestions Count: {0}}" TextColor="Black"/>
+                                    <Label Text="{Binding TimerValue, StringFormat='{}{0:hh.mm}'}" TextColor="Black"/>
+                                    <Label Text="{Binding CreateTestDate, StringFormat='{}{0:dd.MM.yyyy}'}" TextColor="Black"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" Grid.Row="1">
+                                    <ImageButton Margin="10,0,10,10" Source="/Images/play.png"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=GoToRunTestPageCommand}" CommandParameter="{Binding}"/>
+                                    <ImageButton Margin="10,5,10,10" Source="/Images/edit.png"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=EditTestCommand}" CommandParameter="{Binding}"/>
+                                    <ImageButton Margin="10,5,10,10" Source="/Images/del.png"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=RemoveTestCommand}" CommandParameter="{Binding}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+    </Grid>
+</ContentPage>
